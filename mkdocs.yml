@@ -1,0 +1,8 @@
+site_name: Wanini's Python Sample Project
+nav:
+    - Home: README.md
+    - Contributing: contributing.md
+
+repo_url: https://github.com/Wanini0209/wPyProj
+remote_branch: gh-pages
+remote_name: origin
