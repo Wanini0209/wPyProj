@@ -168,7 +168,6 @@ _COPY_FILES = ['.editorconfig',
                '.gitignore',
                '.pre-commit-config.yaml',
                '.pylintrc',
-               'CHANGELOG.md',
                'pyproject.toml',
                'pytest.ini']
 

@@ -85,10 +85,27 @@ def _readme(info: ProjectInfo) -> str:
     return ret
 
 
+def _changelog(info: ProjectInfo) -> str:
+    ret = ("# Changelog\n\n"
+           "All notable changes to this project will be documented in this file."
+           "\n\n"
+           "The format is based on [Keep a Changelog]"
+           "(https://keepachangelog.com/en/1.0.0/),\n"
+           "and this project adheres to [Semantic Versioning]"
+           "(https://semver.org/spec/v2.0.0.html).\n\n"
+           "## [Unreleased]\n\n"
+           "### Added\n")
+    return ret
+
+
 def gen_docs(info: ProjectInfo):
-    path = path = f'{info.path}/{info.name}/docs'
+    with open(f'{info.path}/{info.name}/CHANGELOG.md', 'w') as f:
+        f.write(_changelog(info))
+    path = f'{info.path}/{info.name}/docs'
     os.makedirs(path)
     with open(f'{path}/contributing.md', 'w') as f:
         f.write(_contributing(info))
+    with open(f'{path}/README.md', 'w') as f:
+        f.write(_readme(info))
     with open(f'{path}/README.md', 'w') as f:
         f.write(_readme(info))
