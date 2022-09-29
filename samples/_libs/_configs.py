@@ -9,9 +9,11 @@ Created on Tue Sep 23 15:01:00 2022
 import shutil
 
 from ._common import ProjectInfo
+from ._utils import write_text
 
 
 def _bandit(info: ProjectInfo) -> str:
+    """Content-Generator for `.bandit` file."""
     ret = ("[bandit]\n"
            f"targets: {info.package}\n"
            "exclude: tests\n")
@@ -19,6 +21,7 @@ def _bandit(info: ProjectInfo) -> str:
 
 
 def mkdocs(info: ProjectInfo) -> str:
+    """Content-Generator for `mkdocs.yml` file."""
     ret = (f"site_name: {info.description}\n"
            "nav:\n"
            "    - Home: README.md\n"
@@ -30,6 +33,7 @@ def mkdocs(info: ProjectInfo) -> str:
 
 
 def setup_cfg(info: ProjectInfo) -> str:
+    """Content-Generator for `setup.cfg` file."""
     ret = ("[flake8]\n"
            "max-line-length = 88\n"
            "ignore =\n"
@@ -50,6 +54,7 @@ def setup_cfg(info: ProjectInfo) -> str:
 
 
 def setup_py(info: ProjectInfo) -> str:
+    """Content-Generator for `setup.py` file."""
     ret = ("#!/usr/bin/env python3\n"
            "# pylint: disable=missing-module-docstring\n"
            "from os import path\n\n"
@@ -142,6 +147,7 @@ def setup_py(info: ProjectInfo) -> str:
 
 
 def pipfile(info: ProjectInfo) -> str:
+    """Content-Generator for `pipfile` file."""
     ret = ("[[source]]\nurl = \"https://pypi.org/simple\"\n"
            "verify_ssl = true\n"
            "name = \"pypi\"\n\n"
@@ -173,16 +179,12 @@ _COPY_FILES = ['.editorconfig',
 
 
 def gen_configs(info: ProjectInfo):
+    """Content-Generator for config files."""
     path = f'{info.path}/{info.name}'
     for file in _COPY_FILES:
         shutil.copyfile(file, f'{path}/{file}')
-    with open(f'{path}/.bandit', 'w') as f:
-        f.write(_bandit(info))
-    with open(f'{path}/mkdocs.yml', 'w') as f:
-        f.write(mkdocs(info))
-    with open(f'{path}/setup.cfg', 'w') as f:
-        f.write(setup_cfg(info))
-    with open(f'{path}/setup.py', 'w') as f:
-        f.write(setup_py(info))
-    with open(f'{path}/Pipfile', 'w') as f:
-        f.write(pipfile(info))
+    write_text(_bandit(info), f'{path}/.bandit')
+    write_text(mkdocs(info), f'{path}/mkdocs.yml')
+    write_text(setup_cfg(info), f'{path}/setup.cfg')
+    write_text(setup_py(info), f'{path}/setup.py')
+    write_text(pipfile(info), f'{path}/Pipfile')

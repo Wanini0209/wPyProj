@@ -10,6 +10,7 @@ from typing import NamedTuple
 
 
 class ProjectInfo(NamedTuple):
+    """Project Information."""
     path: str
     url: str
     name: str

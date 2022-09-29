@@ -9,7 +9,7 @@ Created on Tue Sep 23 11:50:00 2022
 import os
 import re
 
-from _libs import ProjectInfo, gen_project
+from _libs import ProjectInfo, gen_project  # pylint: disable=import-error
 
 # receive the path of this project.
 path = input("Please input the path of this project: ")

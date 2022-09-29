@@ -10,6 +10,7 @@ import os
 import shutil
 
 from ._common import ProjectInfo
+from ._utils import write_text
 
 _COPY_FILES = ['__init__.py',
                'build.py',
@@ -22,6 +23,7 @@ _COPY_FILES = ['__init__.py',
 
 
 def _common(info: ProjectInfo) -> str:
+    """Content-Generator for `_common.py` module."""
     ret = ("\"\"\"Common definitions\"\"\"\n\n"
            "import sys\n\n"
            "VENV_PREFIX = 'pipenv run'\n"
@@ -34,9 +36,9 @@ def _common(info: ProjectInfo) -> str:
 
 
 def gen_tasks(info: ProjectInfo):
+    """Content-Generator for `tasks` package."""
     path = f'{info.path}/{info.name}/tasks'
     os.makedirs(path)
     for file in _COPY_FILES:
         shutil.copyfile(f'tasks/{file}', f'{path}/{file}')
-    with open(f'{path}/_common.py', 'w') as f:
-        f.write(_common(info))
+    write_text(_common(info), f'{path}/_common.py')

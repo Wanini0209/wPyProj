@@ -16,6 +16,7 @@ from ._tasks import gen_tasks
 
 
 def gen_project(info: ProjectInfo):
+    """Project Generator."""
     path = f'{info.path}/{info.name}'
     os.makedirs(path)
     os.makedirs(f'{path}/{info.package}')

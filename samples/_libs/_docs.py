@@ -9,9 +9,11 @@ Created on Tue Sep 23 14:05:00 2022
 import os
 
 from ._common import ProjectInfo
+from ._utils import write_text
 
 
 def _contributing(info: ProjectInfo) -> str:
+    """Content-Generator for `_contributing.md` file."""
     ret = ("## Contributing\n\n"
            "### Step 1. Fork this repository to your GitHub\n\n"
            "### Step 2. Clone the repository from your GitHub\n\n"
@@ -59,6 +61,7 @@ def _contributing(info: ProjectInfo) -> str:
 
 
 def _readme(info: ProjectInfo) -> str:
+    """Content-Generator for `READMe.md` file."""
     ret = (f"# {info.description} ({info.name})\n\n"
            "## Prerequsite\n\n"
            "### Use pipx\n"
@@ -85,27 +88,22 @@ def _readme(info: ProjectInfo) -> str:
     return ret
 
 
-def _changelog(info: ProjectInfo) -> str:
-    ret = ("# Changelog\n\n"
-           "All notable changes to this project will be documented in this file."
-           "\n\n"
-           "The format is based on [Keep a Changelog]"
-           "(https://keepachangelog.com/en/1.0.0/),\n"
-           "and this project adheres to [Semantic Versioning]"
-           "(https://semver.org/spec/v2.0.0.html).\n\n"
-           "## [Unreleased]\n\n"
-           "### Added\n")
-    return ret
+_CHANGE_LOG = (
+    "# Changelog\n\n"
+    "All notable changes to this project will be documented in this file."
+    "\n\n"
+    "The format is based on [Keep a Changelog]"
+    "(https://keepachangelog.com/en/1.0.0/),\n"
+    "and this project adheres to [Semantic Versioning]"
+    "(https://semver.org/spec/v2.0.0.html).\n\n"
+    "## [Unreleased]\n\n"
+    "### Added\n")
 
 
 def gen_docs(info: ProjectInfo):
-    with open(f'{info.path}/{info.name}/CHANGELOG.md', 'w') as f:
-        f.write(_changelog(info))
+    """Content-Generator for documents."""
+    write_text(_CHANGE_LOG, f'{info.path}/{info.name}/CHANGELOG.md')
     path = f'{info.path}/{info.name}/docs'
     os.makedirs(path)
-    with open(f'{path}/contributing.md', 'w') as f:
-        f.write(_contributing(info))
-    with open(f'{path}/README.md', 'w') as f:
-        f.write(_readme(info))
-    with open(f'{path}/README.md', 'w') as f:
-        f.write(_readme(info))
+    write_text(_contributing(info), f'{path}/contributing.md')
+    write_text(_readme(info), f'{path}/README.md')

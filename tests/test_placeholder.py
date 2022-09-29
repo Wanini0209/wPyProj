@@ -9,4 +9,4 @@ Created on Tue Sep 24 19:54:00 2022
 
 
 def test_placeholder():
-    pass
+    """Test nothing."""
