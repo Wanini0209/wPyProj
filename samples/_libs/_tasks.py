@@ -24,8 +24,8 @@ _COPY_FILES = ['__init__.py',
 def _common(info: ProjectInfo) -> str:
     ret = ("\"\"\"Common definitions\"\"\"\n\n"
            "import sys\n\n"
-           "VENV_PREFIX = `pipenv run`\n"
-           f"_COMMON_TARGETS = [`{info.package}`, `tests`, `setup.py`, `tasks`]\n"
+           "VENV_PREFIX = 'pipenv run'\n"
+           f"_COMMON_TARGETS = ['{info.package}', 'tests', 'setup.py', 'tasks']\n"
            "COMMON_TARGETS_AS_STR = ' '.join(_COMMON_TARGETS)\n"
            "TEST_TARGET = \"{info.package}\"\n\n"
            "# The differences between Linux and Windows\n"
