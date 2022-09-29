@@ -38,4 +38,5 @@ def gen_tasks(info: ProjectInfo):
     os.makedirs(path)
     for file in _COPY_FILES:
         shutil.copyfile(f'tasks/{file}', f'{path}/{file}')
-    _common(info)
+    with open(f'{path}/_common.py', 'w') as f:
+        f.write(_common(info))
