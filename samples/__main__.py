@@ -20,7 +20,7 @@ if not os.path.exists(path):
 
 GITHUB_URL_PAT = re.compile(r'https://github.com/'
                             r'[a-zA-Z_]+[a-zA-Z0-9\-_]*/'
-                            r'[a-z_]+[a-z0-9\-_]*')
+                            r'[a-zA-Z_]+[a-zA-Z0-9\-_]*')
 url = input("Please input the Github url of this project: ")
 if not GITHUB_URL_PAT.match(url):
     raise ValueError(f"illegal Github url: '{url}'")
