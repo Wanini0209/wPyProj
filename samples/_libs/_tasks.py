@@ -26,7 +26,8 @@ def _common(info: ProjectInfo) -> str:
            "import sys\n\n"
            "VENV_PREFIX = `pipenv run`\n"
            f"_COMMON_TARGETS = [`{info.package}`, `tests`, `setup.py`, `tasks`]\n"
-           "COMMON_TARGETS_AS_STR = ' '.join(_COMMON_TARGETS)\n\n"
+           "COMMON_TARGETS_AS_STR = ' '.join(_COMMON_TARGETS)\n"
+           "TEST_TARGET = \"{info.package}\"\n\n"
            "# The differences between Linux and Windows\n"
            "USE_PTY = sys.platform != 'win32'\n")
     return ret
@@ -36,5 +37,5 @@ def gen_tasks(info: ProjectInfo):
     path = f'{info.path}/{info.name}/tasks'
     os.makedirs(path)
     for file in _COPY_FILES:
-        shutil.copyfile(file, f'{path}/file')
+        shutil.copyfile(f'tasks/{file}', f'{path}/{file}')
     _common(info)

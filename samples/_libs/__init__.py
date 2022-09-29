@@ -12,6 +12,7 @@ from pathlib import Path
 from ._common import ProjectInfo
 from ._configs import gen_configs
 from ._docs import gen_docs
+from ._tasks import gen_tasks
 
 
 def gen_project(info: ProjectInfo):
@@ -22,3 +23,4 @@ def gen_project(info: ProjectInfo):
     os.makedirs(f'{path}/tests')
     gen_docs(info)
     gen_configs(info)
+    gen_tasks(info)

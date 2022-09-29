@@ -10,7 +10,7 @@ run:
 """
 from invoke import task
 
-from tasks._common import USE_PTY, VENV_PREFIX
+from tasks._common import TEST_TARGET, USE_PTY, VENV_PREFIX
 
 PYTEST = f"{VENV_PREFIX} pytest"
 
@@ -24,4 +24,4 @@ def run(ctx):
 @task
 def cov(ctx):
     """Check test covreage"""
-    ctx.run(f"{PYTEST} --cov=samples --cov-report=html", pty=USE_PTY)
+    ctx.run(f"{PYTEST} --cov={TEST_TARGET} --cov-report=html", pty=USE_PTY)
