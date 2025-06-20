@@ -177,3 +177,6 @@ pyrightconfig.json
 
 # Windows system files
 desktop.ini
+
+# Auto-generated requirements using `pip freeze`
+.pip_freeze
