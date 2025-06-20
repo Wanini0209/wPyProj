@@ -1,0 +1,40 @@
+default_stages: [push]
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v5.0.0
+    hooks:
+      - id: end-of-file-fixer
+      - id: trailing-whitespace
+        args: [--markdown-linebreak-ext=md]
+
+  - repo: https://github.com/commitizen-tools/commitizen
+    rev: master
+    hooks:
+      - id: commitizen
+        stages: [commit-msg]
+
+  - repo: local
+    hooks:
+      - id: style-check
+        name: style-check
+        stages: [commit]
+        language: system
+        pass_filenames: false
+        entry: pipenv run inv style
+        types: [python]
+
+      - id: security-check
+        name: security-check
+        stages: [push]
+        language: system
+        pass_filenames: false
+        entry: pipenv run inv secure
+        types: [python]
+
+      - id: test
+        name: test
+        stages: [commit]
+        language: system
+        pass_filenames: false
+        entry: pipenv run inv test
+        types: [python]
