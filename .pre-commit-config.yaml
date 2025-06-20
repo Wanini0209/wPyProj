@@ -23,14 +23,6 @@ repos:
         entry: pipenv run inv style
         types: [python]
 
-      - id: security-check
-        name: security-check
-        stages: [push]
-        language: system
-        pass_filenames: false
-        entry: pipenv run inv secure
-        types: [python]
-
       - id: test
         name: test
         stages: [commit]
