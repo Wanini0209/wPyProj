@@ -94,3 +94,29 @@ inv secure
 ```sh
 inv secure.bandit
 ```
+
+### [Optional] Develop on Conda Environment
+
+Generate requirements via `pip freeze`
+
+```sh
+inv conda.freeze
+```
+
+Create Conda develope environment
+
+```sh
+inv conda.create
+```
+
+Remove Conda develope environment
+
+```sh
+inv conda.remove
+```
+
+Activate Conda develope environment
+
+```sh
+inv conda.activate
+```
