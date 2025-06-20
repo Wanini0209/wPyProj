@@ -56,17 +56,16 @@ def _contributing(info: ProjectInfo) -> str:
            "```sh\ninv secure\n```\n\n"
            "*[Optional]* Check whether there is common security issue in the code. "
            "Note that you do not have to fix all the issues warned by `bandit`\n\n"
-           "```sh\ninv secure.bandit\n```\n")
-    if info.conda_info is not None:
-        ret += ("\n### [Optional] Develop on Conda Environment\n\n"
-                "Generate requirements via `pip freeze`\n\n"
-                "```sh\ninv conda.freeze\n```\n\n"
-                "Create Conda develope environment\n\n"
-                "```sh\ninv conda.create\n```\n\n"
-                "Remove Conda develope environment\n\n"
-                "```sh\ninv conda.remove\n```\n\n"
-                "Activate Conda develope environment\n\n"
-                "```sh\ninv conda.activate\n```\n")
+           "```sh\ninv secure.bandit\n```\n\n"
+           "### [Optional] Develop on Conda Environment\n\n"
+           "Generate requirements via `pip freeze`\n\n"
+           "```sh\ninv conda.freeze\n```\n\n"
+           "Create Conda develope environment\n\n"
+           "```sh\ninv conda.create\n```\n\n"
+           "Remove Conda develope environment\n\n"
+           "```sh\ninv conda.remove\n```\n\n"
+           "Activate Conda develope environment\n\n"
+           "```sh\ninv conda.activate\n```\n")
     return ret
 
 

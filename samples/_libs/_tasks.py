@@ -12,15 +12,16 @@ import shutil
 from ._common import ProjectInfo
 from ._utils import write_text
 
-_COPY_FILES = ['build.py',
+_COPY_FILES = ['__init__.py',
+               'build.py',
                'doc.py',
                'env.py',
                'git.py',
                'secure.py',
                'style.py',
-               'test.py']
-_CONDA_FILE = 'conda.py'
-_WO_CONDA_INIT = '_without_conda_init_.py'
+               'test.py',
+               'conda.py']
+
 
 def _common(info: ProjectInfo) -> str:
     """Content-Generator for `_common.py` module."""
@@ -41,9 +42,4 @@ def gen_tasks(info: ProjectInfo):
     os.makedirs(path)
     for file in _COPY_FILES:
         shutil.copyfile(f'tasks/{file}', f'{path}/{file}')
-    if info.conda_info is not None:
-        shutil.copyfile(f'tasks/__init__.py', f'{path}/__init__.py')
-        shutil.copyfile(f'tasks/{_CONDA_FILE}', f'{path}/{_CONDA_FILE}')
-    else:
-        shutil.copyfile(f'tasks/{_WO_CONDA_INIT}', f'{path}/__init__.py')
     write_text(_common(info), f'{path}/_common.py')

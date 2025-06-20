@@ -178,5 +178,8 @@ pyrightconfig.json
 # Windows system files
 desktop.ini
 
+# Local conda environment information
+.conda
+
 # Auto-generated requirements using `pip freeze`
 .pip_freeze

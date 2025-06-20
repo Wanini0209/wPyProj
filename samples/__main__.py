@@ -9,7 +9,7 @@ Created on Tue Sep 23 11:50:00 2022
 import os
 import re
 
-from _libs import CondaInfo, ProjectInfo, gen_project  # pylint: disable=import-error
+from _libs import ProjectInfo, gen_project  # pylint: disable=import-error
 
 # receive the path of this project.
 while True:
@@ -75,18 +75,6 @@ while True:
         continue
     break
 
-# with conda environment
-while True:
-    recv = input("Do you want to develop with conda environment(Y/N): ")
-    if recv == 'Y':
-        conda_info = CondaInfo.make(name, version)
-        break
-    if recv == 'N':
-        conda_info = None
-        break
-    print("invalid input!!")
-
 info = ProjectInfo(path=path, url=url, name=name, description=description,
-                   package=package, author=author, email=email, version=version,
-                   conda_info=conda_info)
+                   package=package, author=author, email=email, version=version)
 gen_project(info)

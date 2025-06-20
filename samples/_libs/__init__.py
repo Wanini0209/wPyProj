@@ -7,10 +7,10 @@ Created on Tue Sep 23 14:05:00 2022
 """
 
 import os
-from pathlib import Path
 import shutil
+from pathlib import Path
 
-from ._common import CondaInfo, ProjectInfo
+from ._common import ProjectInfo
 from ._configs import gen_configs
 from ._docs import gen_docs
 from ._tasks import gen_tasks
@@ -23,9 +23,8 @@ def gen_project(info: ProjectInfo):
     os.makedirs(f'{path}/{info.package}')
     Path(f'{path}/{info.package}/__init__.py').touch()
     os.makedirs(f'{path}/tests')
-    shutil.copyfile(f'tests/test_placeholder.py', f'{path}/tests/test_placeholder.py')
+    shutil.copyfile('tests/test_placeholder.py', f'{path}/tests/test_placeholder.py')
     gen_docs(info)
     gen_configs(info)
     gen_tasks(info)
-    if info.conda_info is not None:
-        info.conda_info.dump2json(f'{path}/.conda')
+    info.dump2json(f'{path}/.info')
