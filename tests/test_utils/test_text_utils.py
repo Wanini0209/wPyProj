@@ -8,7 +8,7 @@ Created on Thu Sep 29 12:24:30 2022
 
 import os
 
-from ._context import read_text, write_text
+from samples._libs._utils import read_text, write_text
 
 
 def test_write_and_read_text():
