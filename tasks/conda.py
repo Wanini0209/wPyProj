@@ -2,8 +2,6 @@
 
 Methods
 -------
-pip_freeze:
-    Generate requirements via `pip freeze`.
 update:
     Update local Conda information.
 create:
@@ -22,9 +20,7 @@ from typing import Dict, NamedTuple, Optional, Union
 
 from invoke import task
 
-from tasks._common import VENV_PREFIX
 
-_REQURIEMENTS_FILE = '.pip_freeze'
 _CONDA_INFO_FILE = '.conda'
 _PROJ_INFO_FILE = '.info'
 _MAX_64BYTE_INT = 0xFFFFFFFFFFFFFFFF
@@ -127,12 +123,6 @@ def get_proj_info() -> Dict[str, str]:
     with open(_PROJ_INFO_FILE, 'r', encoding='utf-8') as f:
         ret = json.load(f)
     return ret
-
-
-@task
-def freeze(ctx):
-    """Generate requirements file via `pip freeze`"""
-    ctx.run(f"{VENV_PREFIX} pip freeze > {_REQURIEMENTS_FILE}")
 
 
 @task

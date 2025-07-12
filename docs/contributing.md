@@ -40,6 +40,12 @@ inv env.init-dev
 
 ### [Optional] Step 7. Install Attendees Analyzer for local test
 
+If you want to generate requirement file, please run:
+
+```sh
+inv build.requirements
+```
+
 If you want to develop it, please run:
 
 ```sh
@@ -97,10 +103,10 @@ inv secure.bandit
 
 ### [Optional] Develop on Conda Environment
 
-Generate requirements via `pip freeze`
+Generate requirements via `Pipfile`
 
 ```sh
-inv conda.freeze
+inv build.requirements
 ```
 
 Create Conda develope environment
