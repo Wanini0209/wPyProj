@@ -1,80 +1,127 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Tue Sep 23 11:50:00 2022
-
-@author: Ting-Hsu Chang
-@email: Wanini.KLP.Mashimaro@gmail.com
-"""
+"""Main entry point of the project."""
 
 import os
 import re
+import sys
+from collections.abc import Callable
 
-from _libs import ProjectInfo, gen_project  # pylint: disable=import-error
+from _libs import ProjectInfo, gen_project
 
-# receive the path of this project.
-while True:
-    path = input("Please input the path of this project: ")
-    if not os.path.exists(path):
-        print(f"No such file or directory: '{path}'")
-        continue
-    break
 
-# receive the Github url of this project
+def _get_input(
+    prompt: str,
+    validator: Callable[[str], bool] | None = None,
+    error_msg: str = "Invalid input.",
+    warning_check: Callable[[str], bool] | None = None,
+    warning_msg: str = "",
+) -> str:
+    """Get and validate user input."""
+    while True:
+        value = input(prompt).strip()
+        if not value:
+            print("Input cannot be empty.")
+            continue
 
-GITHUB_URL_PAT = re.compile(r'https://github.com/'
-                            r'[a-zA-Z_]+[a-zA-Z0-9\-_]*/'
-                            r'[a-zA-Z_]+[a-zA-Z0-9\-_]*')
-while True:
-    url = input("Please input the Github url of this project: ")
-    if not GITHUB_URL_PAT.match(url):
-        print(f"illegal Github url: '{url}'")
-        continue
-    break
+        if validator and not validator(value):
+            print(error_msg)
+            continue
 
-# receive the name of this project
-PROJECT_NAME_PAT = re.compile(r'[a-zA-Z]+[a-zA-Z0-9\-_]*')
-name = input("Please input the name of this project: ")
-if not PROJECT_NAME_PAT.match(name):
-    raise ValueError(f"illegal project name: '{name}'")
+        if warning_check and not warning_check(value):
+            print(warning_msg)
+            confirm = input("Are you sure? (y/n): ")
+            if confirm.lower() != "y":
+                continue
 
-# receive the One-line description of this project
-while True:
-    description = input("Please input the One-line description of this project: ")
-    if '\n' in description:
-        print(f"illegal One-line description: '{description}'")
-        continue
-    break
+        return value
 
-# receive the package name of this project
-LIB_NAME_PAT = re.compile('[a-z]+[a-z0-9_]*')
-while True:
-    package = input("Please input the package name of this project: ")
-    if not LIB_NAME_PAT.match(package):
-        print(f"illegal package name: '{package}'")
-        continue
-    break
 
-# receive the author of this project
-author = input("Please input the name of author of this project: ")
+def _validate_path(path: str) -> bool:
+    """Validate if parent directory exists."""
+    abs_path = os.path.abspath(path)
+    parent_dir = os.path.dirname(abs_path)
+    if not os.path.exists(parent_dir):
+        print(f"Parent directory does not exist: '{parent_dir}'")
+        return False
+    return True
 
-# receive the author email of this project
-EMAIL_PAT = re.compile(r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b')
-while True:
-    email = input("Please input the email of author of this project: ")
-    if not EMAIL_PAT.match(email):
-        print(f"illegal email: '{email}'")
-        continue
-    break
 
-# receive the python version of this project
-PYTHON_VERSION_PAT = re.compile(r'3(\.[1-9]+0?){1,2}')
-while True:
-    version = input("Please input the version of Python of this project: ")
-    if not PYTHON_VERSION_PAT.match(version):
-        print(f"illegal Python version: '{version}'")
-        continue
-    break
+def main():
+    """Run the project generator."""
+    # 1. Path
+    path_input = _get_input(
+        "Please input the path where to create the project: ",
+        validator=_validate_path,
+    )
+    path = os.path.abspath(path_input)
 
-info = ProjectInfo(path=path, url=url, name=name, description=description,
-                   package=package, author=author, email=email, version=version)
-gen_project(info)
+    # 2. URL
+    url = _get_input(
+        "Please input the Repository URL (e.g. GitHub url): ",
+        warning_check=lambda x: "http" in x or "git@" in x,
+        warning_msg="Warning: input does not look like a standard URL.",
+    )
+
+    # 3. Project Name
+    name_pat = re.compile(r"^[a-zA-Z]+[a-zA-Z0-9\-_]*$")
+    name = _get_input(
+        "Please input the name of this project: ",
+        validator=lambda x: bool(name_pat.match(x)),
+        error_msg=(
+            "Illegal project name. Name must start with a letter and "
+            "contain only letters, numbers, '-', or '_'."
+        ),
+    )
+
+    # 4. Description
+    description = _get_input(
+        "Please input the One-line description of this project: ",
+        validator=lambda x: "\n" not in x,
+        error_msg="Illegal One-line description.",
+    )
+
+    # 5. Package Name
+    lib_pat = re.compile(r"^[a-z]+[a-z0-9_]*$")
+    package = _get_input(
+        "Please input the package name (import name) of this project: ",
+        validator=lambda x: bool(lib_pat.match(x)),
+        error_msg="Illegal package name. Must be lowercase.",
+    )
+
+    # 6. Author
+    author = _get_input("Please input the name of author of this project: ")
+
+    # 7. Email
+    email_pat = re.compile(r"\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b")
+    email = _get_input(
+        "Please input the email of author of this project: ",
+        validator=lambda x: bool(email_pat.match(x)),
+        error_msg="Illegal email format.",
+    )
+
+    # 8. Version
+    ver_pat = re.compile(r"3(\.[1-9]+0?){1,2}")
+    version = _get_input(
+        "Please input the version of Python of this project (e.g. 3.12): ",
+        validator=lambda x: bool(ver_pat.match(x)),
+        error_msg="Illegal Python version (e.g., 3.12).",
+    )
+
+    info = ProjectInfo(
+        path=path,
+        url=url,
+        name=name,
+        description=description,
+        package=package,
+        author=author,
+        email=email,
+        version=version,
+    )
+    gen_project(info)
+
+
+if __name__ == "__main__":
+    try:
+        main()
+    except KeyboardInterrupt:
+        print("\nCancelled by user.")
+        sys.exit(1)

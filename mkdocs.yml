@@ -1,4 +1,4 @@
-site_name: Wanini's Python Sample Project
+site_name: Wanini's Python Template Project Generator
 nav:
     - Home: README.md
     - Contributing: contributing.md

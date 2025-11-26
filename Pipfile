@@ -6,18 +6,15 @@ name = "pypi"
 [packages]
 
 [dev-packages]
-flake8 = "*"
-pylint = "*"
 mypy = "*"
-isort = "*"
 pytest = "*"
 pytest-cov = "*"
+pre-commit = "*"
 commitizen = "*"
 invoke = "*"
-bandit = "*"
 mkdocs = "*"
 black = "*"
+ruff = "*"
 
 [requires]
 python_version = "3.12"
-python_full_version = "3.12.2"

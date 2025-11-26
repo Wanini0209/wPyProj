@@ -1,4 +1,4 @@
-default_stages: [push]
+default_stages: [pre-push]
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v5.0.0
@@ -6,6 +6,8 @@ repos:
       - id: end-of-file-fixer
       - id: trailing-whitespace
         args: [--markdown-linebreak-ext=md]
+      - id: check-yaml
+      - id: check-added-large-files
 
   - repo: https://github.com/commitizen-tools/commitizen
     rev: master
@@ -13,11 +15,24 @@ repos:
       - id: commitizen
         stages: [commit-msg]
 
+  - repo: https://github.com/psf/black
+    rev: 24.8.0
+    hooks:
+      - id: black
+
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.5.0
+    hooks:
+      - id: ruff
+        args: [--fix, --exit-non-zero-on-fix]
+
+  # 如果您希望在 commit 前強制執行本地的 invoke style/test 任務，保留此區塊
+  # 如果覺得速度太慢，可以移除
   - repo: local
     hooks:
       - id: style-check
         name: style-check
-        stages: [commit]
+        stages: [pre-commit]
         language: system
         pass_filenames: false
         entry: pipenv run inv style
@@ -25,7 +40,7 @@ repos:
 
       - id: test
         name: test
-        stages: [commit]
+        stages: [pre-commit]
         language: system
         pass_filenames: false
         entry: pipenv run inv test

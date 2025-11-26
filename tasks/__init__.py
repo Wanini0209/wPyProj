@@ -26,6 +26,7 @@ See Also
 Use `inv --list` command to list all available commands.
 
 """
+
 from invoke import Collection
 
 from tasks import conda, doc, env, git, secure, style, test

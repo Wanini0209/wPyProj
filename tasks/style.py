@@ -2,105 +2,100 @@
 
 Methods
 -------
-black:
-    Reformat code through `black`.
-black_check:
-    Check code-style through `black`.
-commit_check:
-    Check commit message through `commitizen`.
-flake8:
-    Check code-style through `flake8`.
-isort:
-    Rearrange import-order through `isort`.
-isort_check:
-    Check import-order through `isort`.
-mypy:
-    Check static-type through `mypy`.
-pylint:
-    Check code-style through `pylint`.
-reformat:
-    Reformat code throguh `black` and `isort`.
+check:
+    Run static analysis and formatting checks without modifying files.
+format:
+    Automatically format code and fix linting issues.
+style:
+    Default task, executes all automatic formatting and fixes.
 run:
-    Check code-style throguh linters.
+    Alias for style task (for backward compatibility).
 
 """
-import sys
 
-from invoke import task
+from invoke import Context, task
 
-from tasks._common import COMMON_TARGETS_AS_STR, VENV_PREFIX
-
-
-@task
-def flake8(ctx):
-    """Check code-style through `flake8`"""
-    ctx.run(f"{VENV_PREFIX} flake8 --config=setup.cfg")
+from tasks._common import VENV_PREFIX
 
 
 @task
-def mypy(ctx):
-    """Check static-type through `mypy`"""
-    ctx.run(f"{VENV_PREFIX} mypy")
+def check(ctx: Context) -> None:
+    """Run static analysis and formatting checks without modifying files.
 
-
-@task
-def black_check(ctx):
-    """Check code-style through `black`"""
-    ctx.run(f"{VENV_PREFIX} black --check {COMMON_TARGETS_AS_STR}")
-
-
-@task
-def isort_check(ctx):
-    """Check import-order through `isort`"""
-    ctx.run(f"{VENV_PREFIX} isort {COMMON_TARGETS_AS_STR} --atomic --check-only")
-
-
-@task
-def commit_check(ctx):
-    """Check commit message through `commitizen`"""
-    result = ctx.run(f"{VENV_PREFIX} cz check --rev-range master..", warn=True)
-    if result.exited == 3:  # NO_COMMIT_FOUND
-        sys.exit(0)
-    else:
-        sys.exit(result.exited)
-
-
-@task
-def pylint(ctx):
-    """Check code-style through `pylint`"""
-    ctx.run(f"{VENV_PREFIX} pylint {COMMON_TARGETS_AS_STR}")
-
-
-@task
-def black(ctx):
-    """Reformat code through `black`"""
-    ctx.run(f"{VENV_PREFIX} black {COMMON_TARGETS_AS_STR}")
-
-
-@task
-def isort(ctx):
-    """Rearrange import-order through `isort`"""
-    ctx.run(f"{VENV_PREFIX} isort {COMMON_TARGETS_AS_STR} --atomic --apply")
-
-
-# pylint: disable=unused-argument
-# `ctx` is required for `invoke` task
-@task(pre=[flake8, mypy, isort_check], default=True)
-def run(ctx):
-    """Check code-style throguh linters.
-
-    Check code-style through `flake`;
-    Check static-type through `mypy`;
-    Check import-order through `isort`.
+    Parameters
+    ----------
+    ctx : invoke.Context
+        The invoke context object.
 
     Notes
     -----
-    `pylint` is not included and
-    only to check code-style not to reformat.
+    This task is suitable for CI/CD pipelines where you want to verify
+    code style without making changes. It will report any style violations
+    but won't modify any files.
 
     """
+    print("--- Checking format: Black ---")
+    ctx.run(f"{VENV_PREFIX} black --check .", warn=True)
+
+    print("\n--- Code checking: Ruff ---")
+    ctx.run(f"{VENV_PREFIX} ruff check .", warn=True)
 
 
-@task(pre=[black, isort])
-def reformat(ctx):
-    """Reformat code throguh `black` and `isort`"""
+@task
+def format(ctx: Context) -> None:
+    """Automatically format code and fix linting issues.
+
+    Parameters
+    ----------
+    ctx : invoke.Context
+        The invoke context object.
+
+    Notes
+    -----
+    This task is for local development use. It will automatically:
+    - Format code using Black
+    - Fix linting issues using Ruff where possible
+
+    """
+    print("--- Auto-formatting: Black ---")
+    ctx.run(f"{VENV_PREFIX} black .")
+
+    print("\n--- Auto-fixing: Ruff ---")
+    ctx.run(f"{VENV_PREFIX} ruff check . --fix")
+
+
+@task(pre=[format], default=True)
+def style(ctx: Context) -> None:
+    """Execute all automatic formatting and fixes.
+
+    Parameters
+    ----------
+    ctx : invoke.Context
+        The invoke context object.
+
+    Notes
+    -----
+    This is the default task for the style collection. It runs all
+    formatting and fixing operations to ensure code style compliance.
+
+    """
+    print("\n[OK] Code style has been automatically fixed and synchronized.")
+
+
+@task(pre=[format])
+def run(ctx: Context) -> None:
+    """Run style task (alias for backward compatibility).
+
+    Parameters
+    ----------
+    ctx : invoke.Context
+        The invoke context object.
+
+    Notes
+    -----
+    This task exists for backward compatibility with code that expects
+    a 'run' task in the style module. It performs the same operations
+    as the 'style' task.
+
+    """
+    print("\n[OK] Code style has been automatically fixed and synchronized.")

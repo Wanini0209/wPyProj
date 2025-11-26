@@ -1,53 +1,38 @@
-[tool.isort]
-multi_line_output = 3
-include_trailing_comma = true
-force_grid_wrap = 0
-use_parentheses = true
-line_length = 88
-
 [tool.black]
 line-length = 88
-include = '\.pyi?$'
-exclude = '''
-/(
-    \.eggs
-  | \.git
-  | \.hg
-  | \.mypy_cache
-  | \.tox
-  | \.venv
-  | _build
-  | buck-out
-  | build
-  | dist
-)/
-'''
+target-version = ['py312']
 
-[tool.coverage]
-    [tool.coverage.report]
-    show_missing = true
-    exclude_lines = [
-        # Have to re-enable the standard pragma
-        'pragma: no cover',
+[tool.ruff]
+# 設定 ruff 的行為，使其與 black 相容
+line-length = 88
+target-version = "py312"
 
-        # Don't complain about missing debug-only code:
-        'def __repr__',
-        'if self\.debug',
+[tool.ruff.lint]
+# 選擇要啟用的規則集
+# 'E', 'F' - flake8 預設規則
+# 'W' - pycodestyle 警告
+# 'I' - isort (導入排序)
+# 'D' - pydocstyle (文件字串風格)
+# 'B' - bandit (安全性)
+# 'C4' - flake8-comprehensions
+# 'UP' - pyupgrade
+# 'PL' - pylint
+select = ["E", "F", "W", "I", "D", "B", "C4", "UP", "PL"]
 
-        # Don't complain if tests don't hit defensive assertion code:
-        'raise AssertionError',
-        'raise NotImplementedError',
+# 可以忽略特定的規則
+ignore = ["D100", "D104", "D107", "D401"]
 
-        # Don't complain if non-runnable code isn't run:
-        'if 0:',
-		'if False:',
-        'if __name__ == .__main__.:'
-    ]
+[tool.ruff.lint.pydocstyle]
+# 設定 pydocstyle 規則，使其遵循 NumPy 風格
+convention = "numpy"
 
-[tool.commitizen]
-name = "cz_conventional_commits"
-version = "1.0.0"
-tag_format = "$version"
-version_files = [
-    "setup.py"
-]
+[tool.ruff.lint.flake8-bandit]
+# 不需要額外設定，使用預設值即可，或根據需求新增 skips
+
+[tool.mypy]
+files = ["samples"]
+ignore_missing_imports = true
+follow_imports = "silent"
+warn_redundant_casts = true
+warn_unused_ignores = true
+warn_unused_configs = true
