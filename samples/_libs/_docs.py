@@ -84,7 +84,7 @@ def _readme(info: ProjectInfo) -> str:
         "## Installation\n\n"
         f"```sh\npython -m pip install {info.name}\n```\n\n"
         "## Contributing\n"
-        "Please see the [Contributing](docs/contributing.md) for further details.\n"
+        "Please see the [Contributing](contributing.md) for further details.\n"
     )
     return ret
 
