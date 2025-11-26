@@ -103,14 +103,14 @@ _CHANGE_LOG = (
 
 
 def gen_docs(info: ProjectInfo):
-    """Content-Generator for documents."""
+    """Generate documentation files."""
     root_path = f"{info.path}/{info.name}"
 
-    # Write README and CHANGELOG to root
+    # Write README, CHANGELOG, and CONTRIBUTING to root
     write_text(_CHANGE_LOG, f"{root_path}/CHANGELOG.md")
     write_text(_readme(info), f"{root_path}/README.md")
+    write_text(_contributing(info), f"{root_path}/contributing.md")
 
-    # Write documentation specific files to docs/
+    # Create docs directory for MkDocs (still required for mkdocs build)
     docs_path = f"{root_path}/docs"
-    os.makedirs(docs_path)
-    write_text(_contributing(info), f"{docs_path}/contributing.md")
+    os.makedirs(docs_path, exist_ok=True)
